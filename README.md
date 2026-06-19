@@ -1,19 +1,19 @@
 # CPP-Math-Library
 
-## Overview
-An optimized linear algebra library for 3D graphics, implementing Vec3 with dot product, cross product, and normalization.
+![CI](https://github.com/skylerblue333/CPP-Math-Library/workflows/CI/badge.svg)
 
-## Quick Start (1-Click Build)
+High-performance C++ implementation for library.
 
+## Architecture
+- **Language**: C++17
+- **Build System**: CMake
+- **Testing**: Native assertions
+- **Deployment**: Docker containerized
+
+## Quick Start
 ```bash
-git clone https://github.com/skylerblue333/CPP-Math-Library.git
-cd CPP-Math-Library
 mkdir build && cd build
 cmake .. && make
-./math_lib
+./test_main
+./main
 ```
-
-## Features
-- Header-only Vec3 implementation
-- Operator overloading
-- Normalized vector operations
