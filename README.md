@@ -1,44 +1,43 @@
-<!-- PORTFOLIO PROJECT PROFILE: maintained by the repository owner -->
+# Sky Math
 
-## Project profile and code-audit snapshot
+A small validated C++20 linear-algebra primitive for reusable local computation in the SKYCOIN4444 engineering portfolio.
 
-**What this is:** **CPP-Math-Library** is a public repository described as: “Optimized linear algebra library for 3D graphics. #SkyCoin4444 #AI #Blockchain #DevOps #Innovation” Its dominant language signals are **C++ (2 files)**.
+## Implemented
 
-**Why it has value:** Its value is best understood through the implementation evidence currently present in the repository: **16 tracked files** were observed in the shallow audit, with the source structure and existing documentation providing the project’s specific context. This README does not treat a prototype, experiment, or archive as a production system without supporting evidence.
+- Header-only `sky::math::Matrix` interface with contiguous storage.
+- Positive matrix-dimension validation and overflow-safe allocation sizing.
+- Bounds-checked matrix access.
+- Dimension-checked matrix multiplication.
+- 2×2 determinant calculation with explicit shape validation.
+- Equal-length, finite-value dot products.
+- Detection of non-finite arithmetic results.
+- CMake interface-library target and executable demonstration.
+- Tests wired against the real library rather than a duplicate implementation.
+- Release warnings-as-errors, CTest, ASan/UBSan verification, non-root container packaging, and smoke execution in CI.
 
-**Implementation evidence:** 1 test-related file(s) detected; 1 dependency or package manifest(s) detected; 2 build/CI/infrastructure signal(s) detected; and 3 documentation or governance file(s) detected. Test filenames observed include `tests/test_main.cpp`. Dependency or package files include `package.json`. Build, CI, or infrastructure signals include `Dockerfile`, `.github/workflows/ci.yml`.
+## Use
 
-**Current status:** The repository is tracked on the `main` branch. The existing source tree, configuration, tests, workflows, and documentation remain authoritative for supported behavior and maturity. A code audit is not a production-readiness certification, and the presence of a test or workflow file does not establish that all checks pass.
+```cpp
+#include "sky/math.hpp"
 
-**Relationship to the wider portfolio:** This repository is one focused component of the broader Skyler Blue Spillers portfolio across AI, software engineering, cloud and DevOps, cybersecurity, blockchain, finance, education, social systems, and creative work. It may provide a service boundary, implementation pattern, experiment, archive, or reusable idea for related repositories. Treat repositories as technical dependencies only where documented interfaces and verified project requirements support that relationship.
+sky::math::Matrix matrix(2, 2);
+matrix.at(0, 0) = 1.0;
+```
 
-**Quality and security note:** No obvious secret-like pattern was detected by the limited static scan; this is not a substitute for a security audit. No TODO/FIXME marker was detected in the scanned text files.
+## Product boundary
 
----
+Status: **engineering beta**.
 
-# Cpp Math Library
+Sky Math is intentionally small. It does not claim BLAS/LAPACK/Eigen/Armadillo parity, SIMD acceleration, sparse matrices, arbitrary-size determinants, decompositions, GPU execution, automatic differentiation, 3D graphics specialization, numerical-condition guarantees, or benchmarked production performance.
 
-![GitHub stars](https://img.shields.io/github/stars/skylerblue333/CPP-Math-Library?style=flat-square)
-![GitHub license](https://img.shields.io/github/license/skylerblue333/CPP-Math-Library?style=flat-square)
+## Build
 
-## 🌟 Overview
-**CPP-Math-Library** is a professional-grade project within the **SkyCoin4444** ecosystem. It focuses on delivering high-value solutions in the domain of **C++**.
+```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON
+cmake --build build
+ctest --test-dir build --output-on-failure
+```
 
-## 🚀 Key Features
-- **Scalable Architecture**: Designed for enterprise-level growth and performance.
-- **Modern Standards**: Implements best practices for clean code and maintainability.
-- **Robust Integration**: Built to work seamlessly within modern cloud-native environments.
+## License
 
-## 🛠️ Technology Stack
-- **Primary Domain**: C++
-- **Ecosystem**: SkyCoin4444 Digital Platform
-
-## 📂 Structure
-The project is organized into a modular structure to ensure clarity and ease of development.
-
-## 👨‍💻 Author
-**Skyler Blue Spillers**
-*Professional Chess Player & Software Engineer*
-
----
-*Powered by SkyCoin4444*
+See `LICENSE`.
