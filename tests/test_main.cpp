@@ -1,46 +1,71 @@
-#include <iostream>
-#include <vector>
-#include <cassert>
+#include "sky/math.hpp"
+
 #include <cmath>
+#include <iostream>
+#include <limits>
 #include <stdexcept>
 
-class Matrix {
-public:
-    int rows, cols;
-    std::vector<std::vector<double>> data;
-    Matrix(int r, int c) : rows(r), cols(c), data(r, std::vector<double>(c, 0.0)) {}
-    double& at(int r, int c) { return data[r][c]; }
-    const double& at(int r, int c) const { return data[r][c]; }
-    Matrix multiply(const Matrix& other) const {
-        if (cols != other.rows) throw std::invalid_argument("Incompatible");
-        Matrix result(rows, other.cols);
-        for (int i = 0; i < rows; ++i)
-            for (int j = 0; j < other.cols; ++j)
-                for (int k = 0; k < cols; ++k)
-                    result.at(i,j) += at(i,k) * other.at(k,j);
-        return result;
-    }
-    double determinant2x2() const { return at(0,0)*at(1,1) - at(0,1)*at(1,0); }
-};
+namespace {
 
-double dot_product(const std::vector<double>& a, const std::vector<double>& b) {
-    double r = 0.0;
-    for (size_t i = 0; i < a.size(); ++i) r += a[i] * b[i];
-    return r;
+bool near(double left, double right) {
+    return std::abs(left - right) < 1e-12;
 }
 
+int fail(const char* message) {
+    std::cerr << message << '\n';
+    return 1;
+}
+
+} // namespace
+
 int main() {
-    Matrix a(2,2);
-    a.at(0,0)=1; a.at(0,1)=2; a.at(1,0)=3; a.at(1,1)=4;
-    assert(a.determinant2x2() == -2.0);
-    
-    Matrix b(2,2);
-    b.at(0,0)=1; b.at(1,1)=1;
-    Matrix c = a.multiply(b);
-    assert(c.at(0,0) == 1.0);
-    
-    assert(dot_product({1,2,3}, {4,5,6}) == 32.0);
-    
-    std::cout << "All math library tests passed!\n";
+    sky::math::Matrix left(2, 2);
+    left.at(0, 0) = 1.0;
+    left.at(0, 1) = 2.0;
+    left.at(1, 0) = 3.0;
+    left.at(1, 1) = 4.0;
+    if (!near(left.determinant2x2(), -2.0)) return fail("determinant mismatch");
+
+    sky::math::Matrix identity(2, 2);
+    identity.at(0, 0) = 1.0;
+    identity.at(1, 1) = 1.0;
+    const auto product = left.multiply(identity);
+    if (!near(product.at(0, 0), 1.0) || !near(product.at(1, 1), 4.0)) return fail("matrix product mismatch");
+
+    if (!near(sky::math::dot_product({1, 2, 3}, {4, 5, 6}), 32.0)) return fail("dot product mismatch");
+
+    bool rejected = false;
+    try {
+        (void)sky::math::dot_product({1}, {1, 2});
+    } catch (const std::invalid_argument&) {
+        rejected = true;
+    }
+    if (!rejected) return fail("vector length mismatch was accepted");
+
+    rejected = false;
+    try {
+        sky::math::Matrix invalid(0, 2);
+    } catch (const std::invalid_argument&) {
+        rejected = true;
+    }
+    if (!rejected) return fail("zero matrix dimension was accepted");
+
+    rejected = false;
+    try {
+        (void)left.at(2, 0);
+    } catch (const std::out_of_range&) {
+        rejected = true;
+    }
+    if (!rejected) return fail("out-of-range matrix access was accepted");
+
+    rejected = false;
+    try {
+        (void)sky::math::dot_product({std::numeric_limits<double>::infinity()}, {1.0});
+    } catch (const std::invalid_argument&) {
+        rejected = true;
+    }
+    if (!rejected) return fail("non-finite vector value was accepted");
+
+    std::cout << "Sky Math tests passed\n";
     return 0;
 }
