@@ -1,4 +1,7 @@
-FROM gcc:14 AS build
+FROM debian:bookworm-slim AS build
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends g++ \
+    && rm -rf /var/lib/apt/lists/*
 WORKDIR /src
 COPY include ./include
 COPY src ./src
